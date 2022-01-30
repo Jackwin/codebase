@@ -25,7 +25,7 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 Single port RAM
 */
 
-module ram #(
+module spram #(
     parameter SPRAM_ADDR_WIDTH = 8,
     parameter SPRAM_DATA_WIDTH = 32
 ) (
@@ -43,20 +43,20 @@ module ram #(
 
 localparam SPRAM_DEPTH = 2 ** SPRAM_DATA_WIDTH;
 
-logic [RAM_DATA_WIDTH-1:0] spram_bank [SPRAM_DEPTH-1:0];
+logic [SPRAM_DATA_WIDTH-1:0] spram_bank [SPRAM_DEPTH-1:0];
 
-logic [ADDR_WIDTH:0]    wr_addr;
-logic [ADDR_WIDTH:0]    wr_addr_gray;
-logic [ADDR_WIDTH:0]    rd_addr;
-logic [ADDR_WIDTH:0]    rd_addr_gray;
-logic [DATA_WIDTH-1:0]  rd_data;
-logic [ADDR_WIDTH-1:0]  addr;
+logic [SPRAM_ADDR_WIDTH:0]    wr_addr;
+logic [SPRAM_ADDR_WIDTH:0]    wr_addr_gray;
+logic [SPRAM_ADDR_WIDTH:0]    rd_addr;
+logic [SPRAM_ADDR_WIDTH:0]    rd_addr_gray;
+logic [SPRAM_DATA_WIDTH-1:0]  rd_data;
+logic [SPRAM_ADDR_WIDTH-1:0]  addr;
 
-assign wr_addr_gray = wr_addr ^ {1'b0, wr_addr[COUNTER_WIDTH-1:1]};
-assign rd_addr_gray = rd_addr ^ {1'b0, rd_addr[COUNTER_WIDTH-1:1]};
+assign wr_addr_gray = wr_addr ^ {1'b0, wr_addr[SPRAM_ADDR_WIDTH-1:1]};
+assign rd_addr_gray = rd_addr ^ {1'b0, rd_addr[SPRAM_ADDR_WIDTH-1:1]};
 
-assign o_full = (wr_addr_gray == {~rd_addr_gray[ADDR_WIDTH:ADDR_WIDTH-1],
-                                rd_addr_gray[ADDR_WIDTH-2:0]});
+assign o_full = (wr_addr_gray == {~rd_addr_gray[SPRAM_ADDR_WIDTH:SPRAM_ADDR_WIDTH-1],
+                                rd_addr_gray[SPRAM_ADDR_WIDTH-2:0]});
 assign o_empty = (wr_addr_gray == rd_addr_gray);
 
 assign addr = i_wr_ena ? i_wr_addr : i_rd_addr;
@@ -73,5 +73,4 @@ ram #(
     .o_rd_data(o_rd_data)
 );
 
-    
 endmodule

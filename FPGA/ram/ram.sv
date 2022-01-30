@@ -19,7 +19,7 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-`timescale 1ps/1ps
+`timescale 1ns/1ps
 
 module ram #(
     parameter RAM_ADDR_WIDTH = 8,
@@ -33,10 +33,9 @@ module ram #(
     output [RAM_DATA_WIDTH-1:0]   o_rd_data
 );
 
-localparam RAM_DEPTH = 2 ** RAM_DATA_WIDTH;
+localparam RAM_DEPTH = 2 ** RAM_ADDR_WIDTH;
 
-logic [RAM_DATA_WIDTH-1:0] ram_bank [RAM_DEPTH-1:0];
-
+logic [RAM_DATA_WIDTH-1:0] ram_bank [0:RAM_DEPTH-1];
 
 always @(posedge clk) begin
     if (i_we) begin
